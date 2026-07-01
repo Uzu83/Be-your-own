@@ -12,16 +12,29 @@ import { formatAmount, selectBestConversion } from "../../domain/conversion/conv
 import { BASE_UNIT, Cumulative } from "../../domain/types";
 import { colors, spacing, type } from "../theme";
 
-function ActivityCard({ cumulative }: { cumulative: Cumulative }) {
+function ActivityCard({
+  cumulative,
+  onShare,
+}: {
+  cumulative: Cumulative;
+  onShare: () => void;
+}) {
   const activity = ACTIVITIES.find((a) => a.id === cumulative.activityId)!;
   const conversion = selectBestConversion(cumulative.total, cumulative.metric);
   const empty = cumulative.total <= 0;
 
   return (
     <View style={styles.card}>
-      <Text style={styles.cardLabel}>
-        {activity.emoji}  {activity.name}
-      </Text>
+      <View style={styles.cardTop}>
+        <Text style={styles.cardLabel}>
+          {activity.emoji}  {activity.name}
+        </Text>
+        {!empty && (
+          <Pressable onPress={onShare} hitSlop={8}>
+            <Text style={styles.share}>シェア</Text>
+          </Pressable>
+        )}
+      </View>
 
       <View style={styles.heroRow}>
         <Text style={styles.hero}>{formatAmount(cumulative.total)}</Text>
@@ -54,9 +67,11 @@ function ActivityCard({ cumulative }: { cumulative: Cumulative }) {
 export function HomeScreen({
   cumulatives,
   onAdd,
+  onShare,
 }: {
   cumulatives: Record<string, Cumulative>;
   onAdd: () => void;
+  onShare: (activityId: string) => void;
 }) {
   return (
     <SafeAreaView style={styles.safe}>
@@ -67,7 +82,11 @@ export function HomeScreen({
         </View>
 
         {ACTIVITIES.map((a) => (
-          <ActivityCard key={a.id} cumulative={cumulatives[a.id]} />
+          <ActivityCard
+            key={a.id}
+            cumulative={cumulatives[a.id]}
+            onShare={() => onShare(a.id)}
+          />
         ))}
 
         <Text style={styles.footer}>急かさない。ただ、積み上がっていく。</Text>
@@ -92,11 +111,21 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.hairline,
   },
+  cardTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: spacing.sm,
+  },
   cardLabel: {
     fontSize: type.label,
     color: colors.sub,
     letterSpacing: 1,
-    marginBottom: spacing.sm,
+  },
+  share: {
+    fontSize: type.caption,
+    color: colors.ink,
+    textDecorationLine: "underline",
   },
   heroRow: { flexDirection: "row", alignItems: "flex-end" },
   hero: {

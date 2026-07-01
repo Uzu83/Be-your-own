@@ -4,12 +4,14 @@ import { ActivityIndicator, Modal, SafeAreaView, StyleSheet, View } from "react-
 
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { RecordScreen } from "./src/screens/RecordScreen";
+import { ShareScreen } from "./src/screens/ShareScreen";
 import { colors } from "./src/theme";
 import { useSessions } from "./src/useSessions";
 
 export default function App() {
   const { cumulatives, loading, addSession } = useSessions();
   const [recording, setRecording] = useState(false);
+  const [shareId, setShareId] = useState<string | null>(null);
 
   if (loading) {
     return (
@@ -23,7 +25,11 @@ export default function App() {
   return (
     <View style={styles.root}>
       <StatusBar style="dark" />
-      <HomeScreen cumulatives={cumulatives} onAdd={() => setRecording(true)} />
+      <HomeScreen
+        cumulatives={cumulatives}
+        onAdd={() => setRecording(true)}
+        onShare={(id) => setShareId(id)}
+      />
 
       <Modal visible={recording} animationType="slide" presentationStyle="pageSheet">
         <RecordScreen
@@ -33,6 +39,20 @@ export default function App() {
             setRecording(false);
           }}
         />
+      </Modal>
+
+      <Modal
+        visible={shareId !== null}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShareId(null)}
+      >
+        {shareId && (
+          <ShareScreen
+            cumulative={cumulatives[shareId]}
+            onClose={() => setShareId(null)}
+          />
+        )}
       </Modal>
     </View>
   );
