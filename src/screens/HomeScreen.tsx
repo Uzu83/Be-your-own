@@ -68,16 +68,23 @@ export function HomeScreen({
   cumulatives,
   onAdd,
   onShare,
+  onSettings,
 }: {
   cumulatives: Record<string, Cumulative>;
   onAdd: () => void;
   onShare: (activityId: string) => void;
+  onSettings: () => void;
 }) {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
-          <Text style={styles.title}>Be your own</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>Be your own</Text>
+            <Pressable onPress={onSettings} hitSlop={8}>
+              <Text style={styles.settings}>設定</Text>
+            </Pressable>
+          </View>
           <Text style={styles.subtitle}>あなたが積み上げてきた、事実。</Text>
         </View>
 
@@ -103,6 +110,12 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   scroll: { padding: spacing.lg, paddingBottom: 96 },
   header: { marginBottom: spacing.xl, marginTop: spacing.md },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  settings: { fontSize: type.caption, color: colors.sub, textDecorationLine: "underline" },
   title: { fontSize: 22, fontWeight: "700", color: colors.ink, letterSpacing: 0.5 },
   subtitle: { fontSize: type.body, color: colors.sub, marginTop: spacing.xs },
 

@@ -2,8 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { ActivityIndicator, Modal, SafeAreaView, StyleSheet, View } from "react-native";
 
+import { AdBanner } from "./src/monetization/AdBanner";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { RecordScreen } from "./src/screens/RecordScreen";
+import { SettingsScreen } from "./src/screens/SettingsScreen";
 import { ShareScreen } from "./src/screens/ShareScreen";
 import { colors } from "./src/theme";
 import { useSessions } from "./src/useSessions";
@@ -12,6 +14,7 @@ export default function App() {
   const { cumulatives, loading, addSession } = useSessions();
   const [recording, setRecording] = useState(false);
   const [shareId, setShareId] = useState<string | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   if (loading) {
     return (
@@ -29,7 +32,10 @@ export default function App() {
         cumulatives={cumulatives}
         onAdd={() => setRecording(true)}
         onShare={(id) => setShareId(id)}
+        onSettings={() => setSettingsOpen(true)}
       />
+
+      <AdBanner />
 
       <Modal visible={recording} animationType="slide" presentationStyle="pageSheet">
         <RecordScreen
@@ -53,6 +59,15 @@ export default function App() {
             onClose={() => setShareId(null)}
           />
         )}
+      </Modal>
+
+      <Modal
+        visible={settingsOpen}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setSettingsOpen(false)}
+      >
+        <SettingsScreen onClose={() => setSettingsOpen(false)} />
       </Modal>
     </View>
   );
