@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # npm 依存(Expo / React Native)の脆弱性・更新を監視
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  # GitHub Actions 自体の更新も監視
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
