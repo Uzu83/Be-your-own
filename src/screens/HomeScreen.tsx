@@ -15,16 +15,23 @@ import { colors, spacing, type } from "../theme";
 function ActivityCard({
   cumulative,
   onShare,
+  onOpen,
 }: {
   cumulative: Cumulative;
   onShare: () => void;
+  onOpen: () => void;
 }) {
   const activity = ACTIVITIES.find((a) => a.id === cumulative.activityId)!;
   const conversion = selectBestConversion(cumulative.total, cumulative.metric);
   const empty = cumulative.total <= 0;
 
   return (
-    <View style={styles.card}>
+    <Pressable
+      style={styles.card}
+      onPress={onOpen}
+      disabled={empty}
+      accessibilityLabel={`${activity.name}の詳細`}
+    >
       <View style={styles.cardTop}>
         <Text style={styles.cardLabel}>
           {activity.emoji}  {activity.name}
@@ -60,7 +67,7 @@ function ActivityCard({
             )} ${BASE_UNIT[cumulative.metric]}`}
         </Text>
       )}
-    </View>
+    </Pressable>
   );
 }
 
@@ -69,11 +76,13 @@ export function HomeScreen({
   onAdd,
   onShare,
   onSettings,
+  onOpen,
 }: {
   cumulatives: Record<string, Cumulative>;
   onAdd: () => void;
   onShare: (activityId: string) => void;
   onSettings: () => void;
+  onOpen: (activityId: string) => void;
 }) {
   return (
     <SafeAreaView style={styles.safe}>
@@ -93,6 +102,7 @@ export function HomeScreen({
             key={a.id}
             cumulative={cumulatives[a.id]}
             onShare={() => onShare(a.id)}
+            onOpen={() => onOpen(a.id)}
           />
         ))}
 

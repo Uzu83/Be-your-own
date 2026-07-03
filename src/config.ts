@@ -5,8 +5,8 @@ import { Platform } from "react-native";
  * 本番のキーやユーザー名はここ（もしくは環境変数）で差し替える。
  */
 
-/** Ko-fi の応援ページ。<your-name> を自分のユーザー名に置き換える。 */
-export const KOFI_URL = "https://ko-fi.com/your-name";
+/** Ko-fi の応援ページ。 */
+export const KOFI_URL = "https://ko-fi.com/uz_u83";
 
 /**
  * 広告を有効にするか。開発中や、将来「応援者は広告オフ」を実装する際に使う。

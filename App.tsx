@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ActivityIndicator, Modal, SafeAreaView, StyleSheet, View } from "react-native";
 
 import { AdBanner } from "./src/monetization/AdBanner";
+import { DetailScreen } from "./src/screens/DetailScreen";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { RecordScreen } from "./src/screens/RecordScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
@@ -14,6 +15,7 @@ export default function App() {
   const { cumulatives, loading, addSession } = useSessions();
   const [recording, setRecording] = useState(false);
   const [shareId, setShareId] = useState<string | null>(null);
+  const [detailId, setDetailId] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   if (loading) {
@@ -33,6 +35,7 @@ export default function App() {
         onAdd={() => setRecording(true)}
         onShare={(id) => setShareId(id)}
         onSettings={() => setSettingsOpen(true)}
+        onOpen={(id) => setDetailId(id)}
       />
 
       <AdBanner />
@@ -57,6 +60,25 @@ export default function App() {
           <ShareScreen
             cumulative={cumulatives[shareId]}
             onClose={() => setShareId(null)}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        visible={detailId !== null}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={() => setDetailId(null)}
+      >
+        {detailId && (
+          <DetailScreen
+            cumulative={cumulatives[detailId]}
+            onClose={() => setDetailId(null)}
+            onShare={() => {
+              const id = detailId;
+              setDetailId(null);
+              setShareId(id);
+            }}
           />
         )}
       </Modal>
