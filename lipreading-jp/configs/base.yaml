@@ -1,0 +1,6 @@
+# 学習設定。単語レベル MVP の既定値。
+seq_len: 32       # 各クリップを固定長 32 フレームにリサンプル
+batch_size: 16
+epochs: 40
+lr: 0.001
+val_split: 0.2

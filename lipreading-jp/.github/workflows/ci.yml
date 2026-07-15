@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff numpy pytest
+      - run: ruff check src tests
+      - name: 構文チェック（重い依存を入れずに担保）
+        run: python -m compileall src
+      - name: 純粋ロジックのテスト（torch/mediapipe 不要）
+        run: PYTHONPATH=src pytest tests -q

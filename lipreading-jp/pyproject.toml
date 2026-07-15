@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lipreading-jp"
+version = "0.1.0"
+description = "日本語の読唇（単語レベル MVP）: MediaPipe 特徴 + 軽量 3DCNN/GRU"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "opencv-python>=4.8",
+    "mediapipe>=0.10",
+    "torch>=2.1",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.6", "pytest>=8.0"]
+
+[project.scripts]
+lipreading-extract = "lipreading.extract:main"
+lipreading-train = "lipreading.train:main"
+lipreading-infer = "lipreading.infer:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
